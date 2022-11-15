@@ -12,9 +12,16 @@ Sprite s;
 //Sprite g3;
 Sprite f1;
 Ground[]g;
+Boarder[]bd;
+Mountains[] mt;
+FireBG[] fb;
 Boulder b ;
 Fire f;
+Sky sk; 
 int nGround = 8;
+int nBoarder = 5;
+int nMountains = 9;
+int nFireBG = 8;
 
 //START
 void setup()
@@ -32,7 +39,6 @@ void draw()
   if (gameState == 0) startScreen();
   if (gameState == 1) gamePlay();
   if (gameState == 2) deadScreen();
-  
  }
  //END VOID DRAW
  
@@ -70,13 +76,35 @@ void startScreen()
  background(0);
  translate(width/2, height/2);
 
+ sk.update();
+ sk.check();
+ sk.display();
+ 
+ for(int i =0; i < nMountains; i = i + 1)
+{
+ mt[i].update();
+ mt[i].check();
+ mt[i].display();
+}
+
+for(int i =0; i < nFireBG; i = i + 1)
+{
+ fb[i].update();
+ fb[i].check();
+ fb[i].display();
+}
+
+noStroke();
+fill(255,50,200,20);
+rect(-400,-300, width, height);
+ 
 for(int i =0; i < nGround; i = i + 1)
 {
  g[i].update();
  g[i].check();
  g[i].display();
 }
-  
+
  
  b.update();
  b.check();
@@ -86,10 +114,20 @@ for(int i =0; i < nGround; i = i + 1)
  f1.check();
  f1.display();
  
- 
+
  s.update();
  s.check();
  s.display();
+ 
+ for(int i =0; i < nBoarder; i = i + 1)
+{
+ bd[i].update();
+ bd[i].check();
+ bd[i].display();
+}
+ 
+
+ 
 }//END GAMEPLAY
 
 //END GAMESTATES
@@ -163,21 +201,69 @@ for (int i = 0; i < nGround; i = i + 1)
   }
 //END GROUND (FILE 4)
 
-//BOULDER (FILE 6)
+//BOULDER (FILE 6,11)
   String[] files6 = {"boulder.svg","boulder2.svg","boulder3.svg","boulder2.svg"};
   b= new Boulder();
   b.addAnimation(files6,6);
-//END BOULDER (FILE 6)
+  
+  String[] files11 = {"bdie1.svg","bdie2.svg","bdie3.svg","bdie4.svg","bdie5.svg","bdie6.svg","bdie7.svg","bdie8.svg","bdie9.svg"};
+  b.addAnimation(files11,5);
+  
+//END BOULDER (FILE 6,11)
 
-//FIREBALL (FILE 5)
+//FIREBALL (FILE 5,11)
   f1 = new Fire();
   String[] files5 = {"fire.svg"};
-  f1.addAnimation(files5, 10);
- //FIREBALL (FILE 5)
+  f1.addAnimation(files5, 10); 
+ //FIREBALL (FILE 5,11)
  
+ //SKY (FILE 7)
+  sk = new Sky();
+  String[] files7 = {"Sky.svg"};
+  sk.addAnimation(files7, 10);
+ //SKY (FILE 7)
  
- 
- 
+  //BOARDER (FILE 8)
+  nGround = ceil(width/1000.0)+1;
+  println(nBoarder);
+  bd = new Boarder[nBoarder];
+  String[] files8 = {"Boarder.svg"};
+
+for (int i = 0; i < nBoarder; i = i + 1)
+  {
+   bd[i] = new Boarder();
+   bd[i].addAnimation(files8, 15);
+   bd[i].location.x = -(width/2.0) + (bd[i].boxX * i);    
+  }
+//END BOARDER (FILE 4)
+
+ //MOUNTAIN(FILE 9)
+  nMountains = ceil(width/1000.0)+1;
+  println(nMountains);
+  mt = new Mountains[nMountains];
+  String[] files9 = {"MountainsBG.svg"};
+
+for (int i = 0; i < nMountains; i = i + 1)
+  {
+   mt[i] = new Mountains();
+   mt[i].addAnimation(files9, 15);
+   mt[i].location.x = -(width/2.0) + (mt[i].boxX * i);    
+  }
+//END MOUNTIAN (FILE 9)
+
+ //FIREBG (FILE 10)
+  nFireBG = ceil(width/1000.0)+1;
+  fb = new FireBG [nFireBG];
+  String[] files10 = {"FireBG_3.svg", "FireBG_2.svg"};
+
+for (int i = 0; i < nFireBG; i = i + 1)
+  {
+   fb[i] = new FireBG();
+   fb[i].addAnimation(files10, 20);
+   fb[i].location.x = -(width/2.0) + (fb[i].boxX * i);    
+  }
+//END FIREBG (FILE 10)
+ //FILE #S = 11
   /* NOT NEEDED
   g[1] = new Ground();
   String[] files4 = {"ground1.svg","ground2.svg","ground3.svg"};

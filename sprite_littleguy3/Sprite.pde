@@ -9,7 +9,7 @@ class Sprite
   
  PVector reg = new PVector (boxX/2, boxY/2); //axis point
  
- Animation[] ani = new Animation[10];
+ Animation[] ani = new Animation[20];
  int nAni = 0;
  int currentAni = -1;
  
@@ -20,7 +20,7 @@ class Sprite
  
  void addAnimation(String[] filenames, int speed)
  {
-   if (nAni < 10)
+   if (nAni < 20)
    {
    this.ani[nAni] = new Animation(filenames);
    this.ani[nAni].speed = speed;
@@ -41,7 +41,7 @@ class Sprite
   
   void check()
   {
-   float actualX = screenX(this.location.x, this.location.y);
+  float actualX = screenX(this.location.x, this.location.y);
   float newX = screenX(-boxX, this.location.y);
   if(actualX > width + boxX) this.location.x = - boxX - (width/2);; //if location is bigger than width of screen, the sprite will be moved to the other side 
  if (actualX > width+boxX)
@@ -82,10 +82,11 @@ class Sprite
   {
     
   }
-  
-  void show()
+
+  void hit()
  {
    
  }
+
  
 }//class sprite end
