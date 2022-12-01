@@ -1,13 +1,20 @@
 class Boulder extends Sprite
 {
 boolean hit = false;
+boolean fail = false;
 
  Boulder()
  {
   super();
   this.velocity.x = -4;
   this.location.y = (height/2.5) - boxX;
+ 
  }
+
+  void fail()
+  {
+   this.fail = true; 
+  }
 
   void hit()
   {
@@ -16,11 +23,12 @@ boolean hit = false;
  
  void check()
  {
-  if (this.location.x < -this.boxX - (width/2))
+  if (this.location.x <= -this.boxX - (width/2.0))
   {
    this.velocity.y = 0;
-   this.location.x = -(width/2.0) + random(999,1000); //boulder position
-   this.location.y = (height/2.0) - random(250, 450);
+   this.velocity.x = random(-4,-10);
+   this.location.x = -(width/2.0) + random(999,1800); //boulder position
+   this.location.y = (height/2.0) - random(200, 450);
    this.currentAni = floor(random(0, this.nAni));
    this.boxX = this.ani[currentAni].frames[0].width/5;
    this.boxY = this.ani[currentAni].frames[0].height/5;
@@ -31,27 +39,36 @@ boolean hit = false;
    this.hit = false;
   }
   
-  if(this.collide()) 
+  if (this.location.x > width)
   {
-    if (this.hit == false)
-    {
-    beep.play(); 
-    gameState = 2; 
-    }
-   
-   }
-  
-  if(this.collide2())
-  {
-    beep.play(); 
-    this.hit = true;
+    this.fail = true;
   }
   
+
+  if(this.collide2())
+  {
+    if(boxX < width)
+    {
+    beep.play(); 
+    this.hit = true;
+    }
+    else
+    {
+      this.hit = false;
+    }
+  }
+
+
 if (this.hit)
 {
   if (this.collide2())
   {
  this.currentAni = 1; 
+ if (this.currentAni == 1)
+ {
+   this.velocity.y = 10;
+   this.velocity.x = -4;
+ }
   }
 }
  else 
@@ -61,9 +78,6 @@ if (this.hit)
 
 
  }//VOID CHECK
- 
- 
- 
  
  
  //COLIDES
@@ -92,5 +106,6 @@ boolean collide()
    }
    return(false);
  }
+ 
  
 }

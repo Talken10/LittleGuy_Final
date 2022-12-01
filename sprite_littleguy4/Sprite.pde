@@ -20,7 +20,7 @@ class Sprite
  
  void addAnimation(String[] filenames, int speed)
  {
-   if (nAni < 20)
+   if (nAni < 25)
    {
    this.ani[nAni] = new Animation(filenames);
    this.ani[nAni].speed = speed;

@@ -10,23 +10,30 @@ Sprite s;
 //Sprite g1;
 //Sprite g2;
 //Sprite g3;
-Sprite f1;
+//Sprite f1;
 Ground[]g;
 Boarder[]bd;
 Mountains[] mt;
 FireBG[] fb;
-Boulder b ;
+Boulder b;
 Fire f;
 Sky sk; 
-int nGround = 8;
-int nBoarder = 5;
-int nMountains = 9;
-int nFireBG = 8;
+int nGround = 2;
+int nBoarder = 3;
+int nMountains = 2;
+int nFireBG = 2;
+
+boolean collide = false;
+int kill = 0;
+
+PImage myShape1;
+PImage myShape2; 
+PImage myShape3; 
 
 //START
 void setup()
 {
- 
+  surface.setTitle("Little Guy");
   size (800,600);
   beep = new SoundFile(this, "64940__syna-max__wilhelm-scream.wav");
   s = new LittleGuy();
@@ -39,43 +46,77 @@ void draw()
   if (gameState == 0) startScreen();
   if (gameState == 1) gamePlay();
   if (gameState == 2) deadScreen();
+  if (gameState == 4) instructionScreen();
+  
  }
  //END VOID DRAW
  
 //GAMESTATE CODES:
 void startScreen()
 {
-  noStroke ();
- colorMode(HSB);
+ /* noStroke ();
+  colorMode(HSB);
   fill(5,175,245);
   rect(0,0,width, height);
   fill(255);
   textAlign(CENTER);
-  textSize(25);
+  textSize(50);
   fill(225);
-  text(" little guy ", width/2, height/2);
+  text(" little guy ", width/2, (height/2 - 15));
   
   textAlign(CENTER);
-  textSize(15);
+  textSize(25);
   fill(225);
-  text("press 's' to start ", (width/2), (height/2) + 25);
+  text("press 's' to start ", (width/2), (height/2) + 25);*/
+  
+  myShape1 = loadImage("littleguy startscreen.png");
+  myShape1.resize(width,height);
+  background(myShape1);
+
+ 
 }//END START 
  
+ void instructionScreen()
+ {
+  /* noStroke ();
+  colorMode(HSB);
+  fill(5,175,245);
+  rect(0,0,width, height);
+  fill(255);*/
+   
+  
+  myShape2 = loadImage("littleguy tutorial.png");
+  myShape2.resize(width,height);
+  background(myShape2);
+ }
  void deadScreen()
 {
-  noStroke ();
+  /*noStroke ();
   fill(0,0,0);
   rect(0,0,width, height);
   fill(255);
   textAlign(CENTER);
-  text(" uh oh you're dead, press any key to try again", width/2, height/2);
+  text(" uh oh you're dead, press any key to try again", width/2, height/2);*/
+  myShape2 = loadImage("littleguy endscreen.png");
+  myShape2.resize(width,height);
+  background(myShape2);
+  
+  textAlign(CENTER);
+  textSize(25);
+  fill(255);
+  text("k i l l s :",((width/2)+ 19),574);
+  
+  textAlign(CENTER);
+  textSize(25);
+  fill(255);
+  text(kill,((width/2)+ 69),575);
 }//END DEAD
 
  void gamePlay()
  {
  background(0);
  translate(width/2, height/2);
-
+ 
  sk.update();
  sk.check();
  sk.display();
@@ -105,10 +146,10 @@ for(int i =0; i < nGround; i = i + 1)
  g[i].display();
 }
 
- 
  b.update();
  b.check();
  b.display();
+ 
  
  f.update();
  f.check();
@@ -126,7 +167,7 @@ for(int i =0; i < nGround; i = i + 1)
  bd[i].display();
 }
  
-
+ hud();
  
 }//END GAMEPLAY
 
@@ -138,13 +179,17 @@ void keyPressed()
  
   if (key == 's')
   {
-  if (gameState == 0) gameState = 1;
+  if (gameState == 4) 
+  {
+  gameState = 1;
+  }
+  if (gameState == 0)gameState = 1;
   }
   if (gameState == 1) gameState = 1;
   if (gameState == 2)
     {
       reset();
-      gameState = 1;
+      gameState = 0;
     }
     
  //GAMEPLAY KEYPRESSES
@@ -155,9 +200,13 @@ void keyPressed()
 
 if (key == 'd')
 {
- f.shoot(); 
+ f.shoot();
 }
-
+//STARTSCREEN KEYPRESSES
+if (key == 'i')
+{
+ gameState = 4;  
+}
 }
 //END KEYPRESSED
 
@@ -209,12 +258,14 @@ for (int i = 0; i < nGround; i = i + 1)
  
 
 //BOULDER (FILE 6,11)
+  b = new Boulder();
   String[] files6 = {"boulder.svg","boulder2.svg","boulder3.svg","boulder2.svg"};
-  b= new Boulder();
   b.addAnimation(files6,6);
+  String[] files11 = {"bdie1.svg","bdie2.svg","bdie3.svg","bdie4.svg","bdie5.svg","bdie6.svg","bdie7.svg","bdie8.svg","bdie9.svg","bdie9.svg","bdie9.svg","bdie9.svg","bdie9.svg","bdie9.svg","bdie9.svg","bdie9.svg"};
+  b.addAnimation(files11,10);
   
-  String[] files11 = {"bdie1.svg","bdie2.svg","bdie3.svg","bdie4.svg","bdie5.svg","bdie6.svg","bdie7.svg","bdie8.svg","bdie9.svg","bdie9.svg","bdie9.svg"};
-  b.addAnimation(files11,6);
+ 
+  
   
 //END BOULDER (FILE 6,11)
 
@@ -265,6 +316,9 @@ for (int i = 0; i < nFireBG; i = i + 1)
    fb[i].location.x = -(width/2.0) + (fb[i].boxX * i);    
   }
 //END FIREBG (FILE 10)
+
+
+
  //FILE #S = 11
   /* NOT NEEDED
   g[1] = new Ground();
@@ -284,6 +338,41 @@ for (int i = 0; i < nFireBG; i = i + 1)
   g3.addAnimation(files4, 10);
   g3.location.x = -(-width/2) + (g3.boxX*2); 
  */
+ 
 
+ 
  }
  //END VOID RESET
+ 
+ 
+//# of kills
+void hud()
+{
+  
+  if (b.collide2())
+ {
+  kill = kill + 1; 
+ } 
+ 
+ //kc dec 
+ stroke(255);
+ strokeWeight(2);
+ colorMode(HSB);
+ fill(color(10,200,200,80));
+ rect(150,220,175,41,10); //x,y,w,h
+
+ 
+ fill(255);
+ textAlign(CENTER);
+ textSize(40);
+ text("k i l l s :",222,253);
+ 
+ //kill count
+ fill(255); 
+ textAlign(CENTER);
+ textSize(40);
+ text(kill,302,253); 
+ 
+ 
+}
+//END VOID HUD
