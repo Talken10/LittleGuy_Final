@@ -44,7 +44,11 @@ boolean fail = false;
     this.fail = true;
   }
   
-
+if (this.collide())
+{
+  beep.play(); 
+  gameState = 2;
+}
   if(this.collide2())
   {
     if(boxX < width)
